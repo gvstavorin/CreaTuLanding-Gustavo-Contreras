@@ -3,11 +3,6 @@ import styles from '../ItemListContainer/ItemListContainer.module.css'
 
 export const ItemListContainer = ( { bgBlue, greeting } ) => {
     
-    // const { bgBlue, greeting } = props
-
-    // const bgBlue = props.bgBlue
-    // const greeting = props.greeting
-
     const defaultTitle = "Tienda QWERTY"
 
     return (
