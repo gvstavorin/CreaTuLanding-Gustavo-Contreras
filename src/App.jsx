@@ -1,14 +1,22 @@
 
 import { useState } from 'react'
 import NavBar from '../src/components/NavBar/navbar'
+import ItemListContainer from './components/ItemListContainer/ItemListContainer'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const ItemListPropos= {
+
+    grettings: 'Hola Gustavo, Bienvenido a la tienda !'
+  }
 
   return (
     <>
-      
        <NavBar/>
+       <ItemListContainer
+       
+       {...ItemListPropos}
+       />
+
     </>
   )
 }

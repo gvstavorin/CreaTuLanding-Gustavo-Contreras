@@ -1,8 +1,12 @@
+import { BsBasketFill } from "react-icons/bs";
+
 export const CartWidget = () => {
     return (
       <div>
-          <span> 🛒 </span>
+          <span> <BsBasketFill /> </span>
           <span> 3 </span>
       </div>
     )
   }
+
+
