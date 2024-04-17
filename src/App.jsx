@@ -5,8 +5,8 @@ import ItemListContainer from './components/ItemListContainer/ItemListContainer'
 
 function App() {
   const ItemListPropos= {
-
-    grettings: 'Hola Gustavo, Bienvenido a la tienda !'
+    greeting: 'Hola Gustavo, Bienvenido a la tienda !',
+    bgBlue: true
   }
 
   return (

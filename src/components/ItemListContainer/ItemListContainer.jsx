@@ -8,7 +8,7 @@ export const ItemListContainer = ( { bgBlue, greeting } ) => {
     // const bgBlue = props.bgBlue
     // const greeting = props.greeting
 
-    const defaultTitle = "Default title"
+    const defaultTitle = "Tienda QWERTY"
 
     return (
         <main>
