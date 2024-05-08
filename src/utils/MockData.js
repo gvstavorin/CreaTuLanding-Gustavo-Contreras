@@ -5,7 +5,16 @@
   };
 
   export const getProductsByCategory = (categoriaId) => {
-    return fetch("https://fakestoreapi.com/products").then((res) => res.json());
+    if (categoriaId==='electronica'){
+        categoriaId = 'electronics';
+    }else if(categoriaId==='mens'){
+      categoriaId = "men's clothing";
+    }else if(categoriaId==='womens'){
+      categoriaId = "women's clothing";
+    }else if(categoriaId==='joyeria'){
+      categoriaId = 'jewelery';
+    } 
+    return fetch('https://fakestoreapi.com/products/category/'+categoriaId).then((res) => res.json());
 
   };
   
