@@ -1,23 +1,27 @@
+import { ItemListContainer } from "./components/ItemListContainer/ItemListContainer";
+import { Footer } from "./components/Layout/Footer/Footer";
+import NavBar from "./components/Layout/NavBar/navbar";
+import { Error } from "./components/error/error";
+import { BrowserRouter,Routes, Route } from "react-router-dom";
+import Home from "./pages/Home/home";
 
-import { useState } from 'react'
-import NavBar from '../src/components/NavBar/navbar'
-import ItemListContainer from './components/ItemListContainer/ItemListContainer'
-
-function App() {
-  const ItemListPropos= {
-    greeting: 'Hola Gustavo, Bienvenido a la tienda !',
-    bgBlue: true
-  }
-
+const App = () => {
   return (
     <>
-       <NavBar/>
-       <ItemListContainer
-       {...ItemListPropos}
-       />
+    <BrowserRouter>
+        <NavBar/>
+        
+         <Routes>
+         <Route path='/' element={<ItemListContainer/>}/>
+         <Route path='/categoria/:categoriaId' element={<ItemListContainer/>}/>
+         <Route path='*' element={<Error/>}/> 
 
+        </Routes>
+     <Footer/>
+    </BrowserRouter>
+    
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

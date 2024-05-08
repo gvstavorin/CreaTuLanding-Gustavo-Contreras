@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import {CartWidget} from '../CartWidget/CartWidget'
-import '../NavBar/navbar.css'
+import {CartWidget} from '../../CartWidget/CartWidget'
+import {Link, NavLink} from 'react-router-dom'
+import './navbar.css'
 
-function Navbar() {
+function NavBar() {
 	const navRef = useRef();
 
 	const showNavbar = () => {
@@ -16,10 +17,11 @@ function Navbar() {
 		<header>
 			<h3>LOGO</h3>
 			<nav ref={navRef}>
-				<a href="/#">HOME</a>
-				<a href="/#">OP 1</a>
-				<a href="/#">OP 2</a>
-				<a href="/#">OP 3</a>
+				<Link to="/">HOME</Link>
+				<Link to="/categoria/electronica">Electronica</Link>
+				<Link to="/categoria/mens">Ropa Hombre</Link>
+				<Link to="/categoria/womens">Ropa Mujer</Link>
+				<Link to="/categoria/joyeria">Joyas</Link>
 				<button
 					className="nav-btn nav-close-btn"
 					onClick={showNavbar}>
@@ -38,4 +40,4 @@ function Navbar() {
 	);
 }
 
-export default Navbar;
+export default NavBar;
