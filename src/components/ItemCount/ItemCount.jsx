@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState } from "react";
+import styles from "./ItemCount.module.css";
 
 export const ItemCount = () => {
     const [cantItems, setCantItems] = useState(0)
@@ -17,7 +18,7 @@ export const ItemCount = () => {
 
   return (
     <>
-        <div>ItemCount</div>
+        <div></div>
         <button onClick={ handlleAdd }> + </button>
         <span> { cantItems } </span>
         <button onClick={ handlleSubs }> - </button>

@@ -1,30 +1,25 @@
-import { Item } from "../Item/Item"
-import { useState } from 'react';
+import { Card } from "react-bootstrap";
+import styles from "./itemdetails.module.css";
+import StarRating from "../RatingStars/RatingStars";
+import { ItemCount } from "../ItemCount/ItemCount";
+export const ItemDetails = ({product})=>{
 
-
-function ItemDetails() {
-    const [itemDetails, setItemDetails] = useState(null);
-
-    // Función para manejar los datos recibidos
-    const handleReceiveItemData = (itemData) => {
-        setItemDetails(itemData);
-    };
 
     return (
-        <div>
-            <h2>Item Details</h2>
-            {itemDetails ? (
-                <div>
-                    <p>Título: {itemDetails.title}</p>
-                    <p>Descripción: {itemDetails.description}</p>
-                </div>
-            ) : (
-                <p>No hay datos recibidos</p>
-            )}
-            {/* Pasamos la función handleReceiveItemData a Item como prop */}
-            <Item enviarDatos={handleReceiveItemData} itemData={{ title: 'Item Title', description: 'Item Description' }} />
-        </div>
-    );
-}
+    
+        <Card className={styles.item}>
+          <Card.Img  src={product.image} />
+          <Card.Body className={styles.body}>
+            <Card.Title className={styles.title}>{product.title}</Card.Title>
+            <Card.Text className={styles.text}> {product.description}</Card.Text>
+            <Card.Text className={styles.precio}> $ {product.price}</Card.Text>
+            <Card.Text>  <ItemCount Stock={product.rating.count} initial={1}></ItemCount> </Card.Text>
+          
+            
+          </Card.Body>
+          <Card.Footer className="text-muted">Valoracion: <StarRating rating={product.rating.rate} /></Card.Footer>
+            
+        </Card>
+      );
 
-export default ItemDetails;
+}

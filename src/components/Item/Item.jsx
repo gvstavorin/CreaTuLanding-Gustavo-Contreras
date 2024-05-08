@@ -2,6 +2,7 @@
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import styles from  "./item.module.css";
+import { Link } from "react-router-dom";
 
 
 const MAX_TEXT_LENGTH = 150;
@@ -22,7 +23,6 @@ export const Item = ({ id, description, price, image,title,rating}) => {
 
   
   const handleonClick = () => {
-    console.log(Datos);
   };
 
   return (
@@ -37,11 +37,11 @@ export const Item = ({ id, description, price, image,title,rating}) => {
 
           </Card.Text>
 
-
+          <Link  to={`/producto/${id}`}> 
         <Button className={styles.button} variant="primary" onClick={handleonClick}>
          Ver Detalles
         </Button>
-
+        </Link>
         
       </Card.Body>
 

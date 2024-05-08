@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import styles from "./ItemListContainer.module.css";
 import { useState, useEffect } from "react";
-import { getProducts, setProduct,getProductsByCategory } from "../../utils/MockData";
+import { getProducts,getProductsByCategory } from "../../utils/MockData";
 import { ItemList } from "../ItemList/ItemList";
 import { useFetch } from "../../hooks/useFetch";
 import { Spinner } from "../spinner/Spinner";
@@ -13,7 +13,6 @@ export const ItemListContainer = ({ bgBlue, greeting }) => {
   
   
   const {categoriaId}= useParams();
-  console.log(categoriaId);
   useEffect(() => {
     setLoading(true);
     if(categoriaId){
