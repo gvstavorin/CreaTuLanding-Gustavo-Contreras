@@ -1,0 +1,17 @@
+.main {
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .card{
+    justify-content: center;
+    width: 60%;
+    height: 60%;
+    background-color: rgb(89, 89, 99);
+  }

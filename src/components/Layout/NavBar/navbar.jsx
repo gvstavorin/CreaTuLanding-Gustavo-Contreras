@@ -22,6 +22,7 @@ function NavBar() {
 				<Link to="/categoria/mens">Ropa Hombre</Link>
 				<Link to="/categoria/womens">Ropa Mujer</Link>
 				<Link to="/categoria/joyeria">Joyas</Link>
+				<Link to="/carrito">Carrito</Link>
 				<button
 					className="nav-btn nav-close-btn"
 					onClick={showNavbar}>

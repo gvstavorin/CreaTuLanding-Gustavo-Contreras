@@ -6,9 +6,13 @@ import { BrowserRouter,Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/home";
 import { ItemDetails } from "./components/ItemDetails/ItemDetails";
 import { ItemDetailsContainer } from "./components/ItemDetailsContainer/ItemDetailsContainer";
+import CartContextProvider from "./context/CartContext";
+import { Cart } from "./components/Cart/Cart";
+
 
 const App = () => {
   return (
+    <CartContextProvider> 
     <>
     <BrowserRouter>
         <NavBar/>
@@ -17,6 +21,7 @@ const App = () => {
          <Route path='/' element={<ItemListContainer/>}/>
          <Route path='/categoria/:categoriaId' element={<ItemListContainer/>}/>
          <Route path='/producto/:productoId' element={<ItemDetailsContainer/>}/>
+         <Route path='/carrito' element={<Cart/>}/> 
          <Route path='*' element={<Error/>}/> 
 
         </Routes>
@@ -24,6 +29,7 @@ const App = () => {
     </BrowserRouter>
     
     </>
+    </CartContextProvider>
   );
 };
 
