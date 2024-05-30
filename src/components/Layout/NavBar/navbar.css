@@ -44,6 +44,7 @@ header .nav-btn {
 	visibility: hidden;
 	opacity: 0;
 	font-size: 1.8rem;
+	
 }
 
 header div,
@@ -71,6 +72,7 @@ nav {
 		gap: 1.5rem;
 		background-color: var(--mainColor);
 		transition: 1s;
+		z-index: 1;
 	}
 
 	header .responsive_nav {

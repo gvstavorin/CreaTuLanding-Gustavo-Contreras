@@ -12,7 +12,6 @@ export const ItemDetails = ({product})=>{
   
   const handlleAddToCart =(cantItems)=>{
     addToCart(product,cantItems);
-    console.log(`se agregaron ${cantItems} items al carrito`);
   };
 
 
@@ -25,14 +24,15 @@ export const ItemDetails = ({product})=>{
             <Card.Text className={styles.text}> {product.description}</Card.Text>
             <Card.Text className={styles.precio}> $ {product.price}</Card.Text>
             <Card.Text  className={styles.countItem} > 
-               <ItemCount Stock={product.rating.count} initial={1} handlleAddToCart={handlleAddToCart}></ItemCount>
+               <ItemCount Stock={product.stock} initial={1} handlleAddToCart={handlleAddToCart}></ItemCount>
                
                
                 </Card.Text>
           
             
           </Card.Body>
-          <Card.Footer className="text-muted">Valoracion: <StarRating rating={product.rating.rate} /></Card.Footer>
+          <Card.Text className={styles.precio}> STOCK :  {product.stock}</Card.Text>
+          <Card.Footer className="text-muted">Valoracion: <StarRating rating={product.rating.rate}  />  Vendidos:{product.rating.count}</Card.Footer>
             
         </Card>
       );

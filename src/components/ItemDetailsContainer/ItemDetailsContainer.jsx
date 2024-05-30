@@ -1,28 +1,33 @@
 import { useEffect,useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../../utils/MockData";
 import { ItemDetails } from "../ItemDetails/ItemDetails";
 import {Spinner} from '../spinner/Spinner'
-
+import { collection,getDoc,doc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 export const ItemDetailsContainer = () =>{
 
-    const proId = useParams();
+    const {productoId} = useParams();
     const [product, setProduct] = useState([]);
     const[ loading, setLoading] = useState(true);
 
     useEffect(()=>{
-     setLoading(true);
-     getProductById(proId).then((res)=>{
-         setProduct(res);
-         setLoading(false);
+     setLoading(true);  
+     const productsCollection = collection(db,"productos");
+     const refDoc = doc(productsCollection,productoId);
 
-
-     }).catch((error) => {
+     
+      getDoc(refDoc).then((res)=>{
+        
+        setProduct({id:res.id,...res.data()});
         setLoading(false);
-        console.log(error)
-     })
+
+      }).catch((err)=>{
+
+        console.log(err);
+        setLoading(false)
+      })
     
-    },[proId]);
+    },[productoId]);
 
 
     return (

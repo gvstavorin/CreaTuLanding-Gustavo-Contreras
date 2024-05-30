@@ -22,7 +22,6 @@ export const useFetch = (url, method, body) => {
         setError(error);
       })
       .finally(() => {
-        console.log("fetch finalizado");
         setLoading(false);
       });
   }, []);
