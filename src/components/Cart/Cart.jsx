@@ -6,17 +6,18 @@ import { RiDeleteBin2Fill } from "react-icons/ri";
 import { MdDone } from "react-icons/md";
 import { useState } from "react";
 import { db } from "../../firebase/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc, getDoc } from "firebase/firestore";
 
 export const Cart = () => {
   const [esVisible, setEsVisible] = useState(false);
   const { cart, totalPrice, removeItem, clearCart } = userCartContext();
-  const [formData,setFormData]= useState({name:'',email:'',tel:'',address:''});
+  const [formData, setFormData] = useState({ name: '', email: '', tel: '', address: '' });
 
   const handleRemoveItem = (id, price, qt) => {
     setEsVisible(false);
     removeItem(id, price, qt);
   };
+
   const handleCleanCart = () => {
     setEsVisible(false);
     clearCart();
@@ -26,32 +27,48 @@ export const Cart = () => {
     setEsVisible(!esVisible);
   };
 
-   
-  const handleOnChange = (e)=>{
-    
-       setFormData({...formData, [e.target.name]: e.target.value})
-    };
-    
-  const handleSaveCart=()=>{
+  const handleOnChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const ordersCollection = collection (db, "orders")
+  const handleSaveCart = async () => {
+    const ordersCollection = collection(db, "orders");
 
     const newOrder = {
       buyer: formData,
-      items : cart,
-      date : new Date(),
+      items: cart,
+      date: new Date(),
       total: totalPrice
-    }
+    };
 
-    addDoc(ordersCollection, newOrder).then((res)=>{
-      alert("Compra realizada con exito, su numero de orden es : "+ res.id   );
-      clearCart(); 
+    try {
+      const res = await addDoc(ordersCollection, newOrder);
+      alert("Compra realizada con éxito, su número de orden es: " + res.id);
+
+      // Actualizar el stock de los productos
+      const updateStockPromises = cart.map(async (item) => {
+        const productRef = doc(db, "productos", item.id);
+        const productSnap = await getDoc(productRef);
+
+        if (productSnap.exists()) {
+          const productData = productSnap.data();
+          await updateDoc(productRef, {
+            stock: productData.stock - item.qt
+          });
+        } else {
+          console.error("No se encontro el producto..");
+        }
+      });
+
+      await Promise.all(updateStockPromises);
+
+      clearCart();
       setEsVisible(false);
-      setFormData({name:'',email:'',tel:'',address:''});
-    })
-
-
-  }
+      setFormData({ name: '', email: '', tel: '', address: '' });
+    } catch (error) {
+      console.error(" Error al crear orden o actualizar stock: ", error);
+    }
+  };
 
   return (
     <main className={styles.main}>
@@ -113,27 +130,27 @@ export const Cart = () => {
               <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridEmail">
                   <Form.Label>Correo</Form.Label>
-                  <Form.Control name="email" onChange={(e)=> handleOnChange(e) } type="email" placeholder="Ingrese su correo" />
+                  <Form.Control name="email" onChange={(e) => handleOnChange(e)} type="email" placeholder="Ingrese su correo" required/>
                 </Form.Group>
 
                 <Form.Group as={Col}>
                   <Form.Label>Nombre completo</Form.Label>
-                  <Form.Control name="name" onChange={(e)=> handleOnChange(e) }  type="text" placeholder="Nombre y apellido" />
+                  <Form.Control name="name" onChange={(e) => handleOnChange(e)} type="text" placeholder="Nombre y apellido"required />
                 </Form.Group>
               </Row>
 
               <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridAddress1">
                   <Form.Label>Dirección</Form.Label>
-                  <Form.Control name="address" onChange={(e)=> handleOnChange(e) }  placeholder="Santiago, Chile 123" />
+                  <Form.Control name="address" onChange={(e) => handleOnChange(e)} placeholder="Santiago, Chile 123"required />
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridZip">
                   <Form.Label>Teléfono</Form.Label>
-                  <Form.Control name="tel" onChange={(e)=> handleOnChange(e) }  placeholder="Contacto teléfono / celular" />
+                  <Form.Control name="tel" onChange={(e) => handleOnChange(e)} placeholder="Contacto teléfono / celular"required />
                 </Form.Group>
               </Row>
-              <Button onClick={handleSaveCart} variant="success" >
+              <Button onClick={handleSaveCart} variant="success">
                 Comprar
               </Button>
             </Form>
