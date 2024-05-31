@@ -18,7 +18,7 @@ const CartContextProvider = ({ children }) => {
     const currentQtInCart = currentItemInCart ? currentItemInCart.qt : 0;
 
     if (currentQtInCart + qt > item.stock) {
-      alert('No hay suficiente stock disponible');
+      console.log('no hay suficiente stock')
       return;
     }
 

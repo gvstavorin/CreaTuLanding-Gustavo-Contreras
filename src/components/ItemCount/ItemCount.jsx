@@ -1,88 +1,94 @@
 import React, { useState } from "react";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Button from "react-bootstrap/Button";
+import Swal from "sweetalert2";
 import styles from "./ItemCount.module.css";
+import { userCartContext } from "../../context/CartContext";
 
 export const ItemCount = ({ product, initial, handleAddToCart }) => {
+  const { cart } = userCartContext();
+  const [totalstock, setTotalStock] = useState(0);
+
+  const getTotalStock = () => {
+    const productInCart = cart.find((item) => item.id === product.id);
+    return product.stock - (productInCart ? productInCart.qt : 0);
+  };
+
   const [cantItems, setCantItems] = useState(initial);
-  const [showModal, setShowModal] = useState(false);
+  const [showStockAlert, setShowStockAlert] = useState(false);
 
-  if (!product || typeof product.stock === 'undefined') {
-    return <div>Error: Producto no encontrado o sin stock definido.</div>;
-  }
-
-  const handlleAdd = () => {
-    if (cantItems < product.stock) {
+  const handleAdd = () => {
+    if (cantItems < getTotalStock()) {
       setCantItems(cantItems + 1);
     }
   };
 
-  const handlleSubs = () => {
+  const handleSubtract = () => {
     if (cantItems > 0) {
       setCantItems(cantItems - 1);
     }
   };
 
-  const handleAgregarAlCarrito = () => {
-    setShowModal(true);
-  };
-
-  const handleConfirmarAgregar = () => {
-    if (cantItems <= product.stock) {
-      handleAddToCart(cantItems);
-      setShowModal(false);
+  const handleAddToCartClick = () => {
+    if (cantItems <= getTotalStock() && cantItems > 0) {
+      Swal.fire({
+        title: "Confirmación",
+        text: `¿Estás seguro de que quieres agregar ${cantItems} ${
+          cantItems > 1 ? "productos" : "producto"
+        } al carrito?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleAddToCart(cantItems);
+          Swal.fire({
+            title: "¡Agregado!",
+            text: `Se han agregado ${cantItems} ${
+              cantItems > 1 ? "productos" : "producto"
+            } al carrito.`,
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+        }
+      });
     } else {
-      alert('No hay suficiente stock disponible');
+      setShowStockAlert(true);
+      setTimeout(() => {
+        setShowStockAlert(false);
+      }, 3000);
     }
-  };
-
-  const handleCerrarModal = () => {
-    setShowModal(false);
   };
 
   return (
     <div>
-      <Button 
-        variant="outline-dark" 
-        onClick={handlleSubs} 
+      <Button
+        variant="outline-dark"
+        onClick={handleSubtract}
         disabled={cantItems <= 0}
-      > 
-        - 
+      >
+        -
       </Button>
       <span> {cantItems} </span>
-      <Button 
-        variant="outline-dark" 
-        onClick={handlleAdd} 
-        disabled={cantItems >= product.stock}
-      > 
-        + 
+      <Button
+        variant="outline-dark"
+        onClick={handleAdd}
+        disabled={cantItems >= getTotalStock() || product.stock === 0}
+      >
+        +
       </Button>
 
       <br />
 
-      <Button 
-        onClick={handleAgregarAlCarrito} 
-        disabled={cantItems === 0}
-      >
+      <Button onClick={handleAddToCartClick} disabled={cantItems === 0}>
         Agregar al carrito
       </Button>
 
-      <Modal show={showModal} onHide={handleCerrarModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmación</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          ¿Estás seguro de que quieres agregar {cantItems} {cantItems > 1 ? 'productos' : 'producto'} al carrito?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCerrarModal}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleConfirmarAgregar}>
-            Confirmar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {showStockAlert && (
+        <div className={styles.alert}>No hay suficiente stock disponible.</div>
+      )}
     </div>
   );
 };

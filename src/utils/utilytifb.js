@@ -1,5 +1,3 @@
-
-
 export const getProductsByCategory = (categoriaId) => {
   const categoryMap = {
     electronica: 'electronics',
@@ -12,4 +10,7 @@ export const getProductsByCategory = (categoriaId) => {
    
 };
  
+
+
+
 

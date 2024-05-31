@@ -7,11 +7,13 @@ import { MdDone } from "react-icons/md";
 import { useState } from "react";
 import { db } from "../../firebase/firebase";
 import { addDoc, collection, doc, updateDoc, getDoc } from "firebase/firestore";
+import Swal from 'sweetalert2';
 
 export const Cart = () => {
   const [esVisible, setEsVisible] = useState(false);
   const { cart, totalPrice, removeItem, clearCart } = userCartContext();
   const [formData, setFormData] = useState({ name: '', email: '', tel: '', address: '' });
+  const [errors, setErrors] = useState({});
 
   const handleRemoveItem = (id, price, qt) => {
     setEsVisible(false);
@@ -31,19 +33,62 @@ export const Cart = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    let formErrors = {};
+
+    if (!formData.name) formErrors.name = "El nombre es obligatorio";
+    if (!formData.email) formErrors.email = "El correo es obligatorio";
+    if (!formData.tel) formErrors.tel = "El teléfono es obligatorio";
+    if (!formData.address) formErrors.address = "La dirección es obligatoria";
+
+    setErrors(formErrors);
+
+    return Object.keys(formErrors).length === 0;
+  };
+
+  const showSuccessAlert = (orderId, cart, totalPrice) => {
+    let orderDetails = cart.map(item => 
+      `<li>${item.title} - ${item.qt} x $${item.price}</li>`
+    ).join("");
+
+    Swal.fire({
+      title: 'Compra realizada con éxito',
+      html: `
+        <p>Su numero de orden es: ${orderId}</p>
+        <p><strong>Detalles de la compra:</strong></p>
+        <ul>${orderDetails}</ul>
+        <p><strong>Total gastado: </strong> $${totalPrice}</p>
+      `,
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    });
+  };
+
   const handleSaveCart = async () => {
+    if (!validateForm()) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Por favor, complete todos los campos obligatorios',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
     const ordersCollection = collection(db, "orders");
 
     const newOrder = {
       buyer: formData,
       items: cart,
       date: new Date(),
-      total: totalPrice
+      total: totalPrice,
     };
 
     try {
       const res = await addDoc(ordersCollection, newOrder);
-      alert("Compra realizada con éxito, su número de orden es: " + res.id);
+
+      // Mostrar alerta de éxito con detalles de la compra
+      showSuccessAlert(res.id, cart, totalPrice);
 
       // Actualizar el stock de los productos
       const updateStockPromises = cart.map(async (item) => {
@@ -53,10 +98,10 @@ export const Cart = () => {
         if (productSnap.exists()) {
           const productData = productSnap.data();
           await updateDoc(productRef, {
-            stock: productData.stock - item.qt
+            stock: productData.stock - item.qt,
           });
         } else {
-          console.error("No se encontro el producto..");
+          console.error("No se encontró el producto.");
         }
       });
 
@@ -66,7 +111,13 @@ export const Cart = () => {
       setEsVisible(false);
       setFormData({ name: '', email: '', tel: '', address: '' });
     } catch (error) {
-      console.error(" Error al crear orden o actualizar stock: ", error);
+      console.error("Error al crear orden o actualizar stock: ", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al procesar su orden. Por favor, inténtelo de nuevo.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
     }
   };
 
@@ -130,24 +181,62 @@ export const Cart = () => {
               <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridEmail">
                   <Form.Label>Correo</Form.Label>
-                  <Form.Control name="email" onChange={(e) => handleOnChange(e)} type="email" placeholder="Ingrese su correo" required/>
+                  <Form.Control
+                    name="email"
+                    onChange={(e) => handleOnChange(e)}
+                    type="email"
+                    placeholder="Ingrese su correo"
+                    required
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group as={Col}>
                   <Form.Label>Nombre completo</Form.Label>
-                  <Form.Control name="name" onChange={(e) => handleOnChange(e)} type="text" placeholder="Nombre y apellido"required />
+                  <Form.Control
+                    name="name"
+                    onChange={(e) => handleOnChange(e)}
+                    type="text"
+                    placeholder="Nombre y apellido"
+                    required
+                    isInvalid={!!errors.name}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.name}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Row>
 
               <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridAddress1">
                   <Form.Label>Dirección</Form.Label>
-                  <Form.Control name="address" onChange={(e) => handleOnChange(e)} placeholder="Santiago, Chile 123"required />
+                  <Form.Control
+                    name="address"
+                    onChange={(e) => handleOnChange(e)}
+                    placeholder="Santiago, Chile 123"
+                    required
+                    isInvalid={!!errors.address}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.address}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridZip">
                   <Form.Label>Teléfono</Form.Label>
-                  <Form.Control name="tel" onChange={(e) => handleOnChange(e)} placeholder="Contacto teléfono / celular"required />
+                  <Form.Control
+                    name="tel"
+                    onChange={(e) => handleOnChange(e)}
+                    placeholder="Contacto teléfono / celular"
+                    required
+                    isInvalid={!!errors.tel}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.tel}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Row>
               <Button onClick={handleSaveCart} variant="success">

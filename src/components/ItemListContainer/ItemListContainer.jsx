@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import styles from "./ItemListContainer.module.css";
 import { useState, useEffect } from "react";
-import { getProductsByCategory } from "../../utils/MockData";
 import { ItemList } from "../ItemList/ItemList";
 import { useFetch } from "../../hooks/useFetch";
 import { Spinner } from "../spinner/Spinner";
 import { useParams } from "react-router-dom";
 import {db} from '../../firebase/firebase';
 import { collection, getDocs, query, where} from "firebase/firestore";
+import { getProductsByCategory } from "../../utils/utilytifb";
 
 export const ItemListContainer = ({ bgBlue, greeting }) => {
   const [products, setProducts] = useState([]);

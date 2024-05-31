@@ -8,6 +8,7 @@ import { ItemDetails } from "./components/ItemDetails/ItemDetails";
 import { ItemDetailsContainer } from "./components/ItemDetailsContainer/ItemDetailsContainer";
 import CartContextProvider from "./context/CartContext";
 import { Cart } from "./components/Cart/Cart";
+import { TrackOrder } from "./components/TrackOrder/TrackOder";
 
 
 const App = () => {
@@ -21,11 +22,12 @@ const App = () => {
          <Route path='/' element={<ItemListContainer/>}/>
          <Route path='/categoria/:categoriaId' element={<ItemListContainer/>}/>
          <Route path='/producto/:productoId' element={<ItemDetailsContainer/>}/>
+         <Route path="/seguimiento" element={<TrackOrder/>}/>
          <Route path='/carrito' element={<Cart/>}/> 
          <Route path='*' element={<Error/>}/> 
 
         </Routes>
-     <Footer/>
+        <Footer/>
     </BrowserRouter>
     
     </>
