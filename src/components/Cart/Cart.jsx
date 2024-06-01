@@ -7,12 +7,17 @@ import { MdDone } from "react-icons/md";
 import { useState } from "react";
 import { db } from "../../firebase/firebase";
 import { addDoc, collection, doc, updateDoc, getDoc } from "firebase/firestore";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 export const Cart = () => {
   const [esVisible, setEsVisible] = useState(false);
   const { cart, totalPrice, removeItem, clearCart } = userCartContext();
-  const [formData, setFormData] = useState({ name: '', email: '', tel: '', address: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    tel: "",
+    address: "",
+  });
   const [errors, setErrors] = useState({});
 
   const handleRemoveItem = (id, price, qt) => {
@@ -47,31 +52,50 @@ export const Cart = () => {
   };
 
   const showSuccessAlert = (orderId, cart, totalPrice) => {
-    let orderDetails = cart.map(item => 
-      `<li>${item.title} - ${item.qt} x $${item.price}</li>`
-    ).join("");
+    let orderDetails = cart
+      .map((item) => `<li>${item.title} - ${item.qt} x $${item.price}</li>`)
+      .join("");
 
     Swal.fire({
-      title: 'Compra realizada con éxito',
+      title: "Compra realizada con éxito",
       html: `
         <p>Su numero de orden es: ${orderId}</p>
         <p><strong>Detalles de la compra:</strong></p>
         <ul>${orderDetails}</ul>
         <p><strong>Total gastado: </strong> $${totalPrice}</p>
       `,
-      icon: 'success',
-      confirmButtonText: 'Aceptar'
+      icon: "success",
+      confirmButtonText: "Aceptar",
     });
+  };
+
+  const confirmPurchase = async () => {
+    const result = await Swal.fire({
+      title: "Confirmar compra",
+      text: "¿Está seguro de que desea finalizar la compra?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "Cancelar",
+    });
+
+    return result.isConfirmed;
   };
 
   const handleSaveCart = async () => {
     if (!validateForm()) {
       Swal.fire({
-        title: 'Error',
-        text: 'Por favor, complete todos los campos obligatorios',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
+        title: "Error",
+        text: "Por favor, complete todos los campos obligatorios",
+        icon: "error",
+        confirmButtonText: "Aceptar",
       });
+      return;
+    }
+
+    const isConfirmed = await confirmPurchase();
+
+    if (!isConfirmed) {
       return;
     }
 
@@ -109,14 +133,14 @@ export const Cart = () => {
 
       clearCart();
       setEsVisible(false);
-      setFormData({ name: '', email: '', tel: '', address: '' });
+      setFormData({ name: "", email: "", tel: "", address: "" });
     } catch (error) {
       console.error("Error al crear orden o actualizar stock: ", error);
       Swal.fire({
-        title: 'Error',
-        text: 'Hubo un problema al procesar su orden. Por favor, inténtelo de nuevo.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
+        title: "Error",
+        text: "Hubo un problema al procesar su orden. Por favor, inténtelo de nuevo.",
+        icon: "error",
+        confirmButtonText: "Aceptar",
       });
     }
   };
@@ -149,7 +173,9 @@ export const Cart = () => {
                       <td>{item.qt}</td>
                       <td>
                         <Button
-                          onClick={() => handleRemoveItem(item.id, item.price, item.qt)}
+                          onClick={() =>
+                            handleRemoveItem(item.id, item.price, item.qt)
+                          }
                           variant="danger"
                         >
                           <RiDeleteBin2Fill />
