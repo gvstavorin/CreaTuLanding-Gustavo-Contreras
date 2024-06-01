@@ -33,14 +33,13 @@ Instrucciones para instalar el proyecto en tu máquina local.
 
 Crea un archivo .env en la raíz del proyecto y añade tus credenciales de Firebase:
 
-- REACT_APP_FIREBASE_API_KEY=your-api-key
-- REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain
-- REACT_APP_FIREBASE_PROJECT_ID=your-project-id
-- REACT_APP_FIREBASE_STORAGE_BUCKET=your-storage-bucket
-- REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-- REACT_APP_FIREBASE_APP_ID=your-app-id
-- REACT_APP_FIREBASE_MEASUREMENT_ID=your-measurement-id
--
+- VITE_API_KEY=your-api-key
+- VITE_AUTH_DOMAIN=your-auth-domain
+- VITE_PROJECT_ID=your-project-id
+- VITE_STORAGE_BUCKET=your-storage-bucket
+- VITE_MESSAGING_SENDER_ID=your-messaging-sender-id
+- VITE_APP_ID=your-app-id
+
 ## Configuración de Firebase
 Asegúrate de configurar Firebase correctamente en tu proyecto:
 ```
