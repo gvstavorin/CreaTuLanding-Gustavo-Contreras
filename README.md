@@ -1,4 +1,4 @@
-# Nombre del Proyecto
+# INSTA BUY
 
 Nuestra plataforma es una tienda en línea que ofrece una amplia variedad de productos para satisfacer todas tus necesidades. Desde artículos electrónicos de última generación hasta ropa elegante para mujeres y hombres, y joyas deslumbrantes, tenemos todo lo que necesitas en un solo lugar.
 
